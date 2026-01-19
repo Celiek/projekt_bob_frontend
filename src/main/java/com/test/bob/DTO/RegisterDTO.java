@@ -24,10 +24,11 @@ public class RegisterDTO {
     private String imie;
     @NotBlank(message = "Nazwisko jest wymagane")
     private String nazwisko;
-    private String Status;
+    private String status;
+    @NotNull(message = "Wiek jest wymagany")
     @Min(value = 18, message = "Minimalny wiek to 18")
     @Max(value = 120, message = "Niepoprawny wiek")
-    private int wiek;
+    private Integer wiek;
     // czy na pewno potrzebne jest zdjęcie ?
-    private byte[] zdjecie;
+//    private byte[] zdjecie;
 }

@@ -44,7 +44,7 @@ public class AuthService {
         user.setNazwisko(dto.getNazwisko());
         user.setStatus(dto.getStatus());
         user.setWiek(dto.getWiek());
-        user.setZdjecie(dto.getZdjecie());
+//        user.setZdjecie(dto.getZdjecie());
         Uzytkownik saved = repository.save(user);
 
         return new UserResponseDTO(saved);
