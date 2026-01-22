@@ -12,4 +12,5 @@ public interface RegisterRepository extends JpaRepository<Uzytkownik, Long> {
 
     Optional<Uzytkownik> findByLoginOrEmail(String login, String email);
 
+    Optional<Uzytkownik> findByLogin(String login);
 }

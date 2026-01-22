@@ -1,26 +1,42 @@
 package com.test.bob.Service;
 
+import com.test.bob.Config.JwtUtil;
+import com.test.bob.DTO.AuthResponseDto;
 import com.test.bob.DTO.LoginDto;
 import com.test.bob.DTO.RegisterDTO;
 import com.test.bob.DTO.UserResponseDTO;
 import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Repository.RegisterRepository;
+import com.test.bob.Repository.UzytkownikRepository;
 import com.test.bob.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.test.bob.exception.UserAlreadyExistException;
 
 @Service
 public class AuthService {
-    @Autowired
-    private final RegisterRepository repository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthService(RegisterRepository repository) {
-        this.repository = repository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final UzytkownikRepository repo;
+    private final AuthenticationManager authManager;
+    private final JwtUtil jwtUtil;
+
+
+    public AuthService(
+            AuthenticationManager authManager,
+            JwtUtil jwtUtil,
+            UzytkownikRepository repo,
+            BCryptPasswordEncoder passwordEncoder
+    ) {
+        this.authManager = authManager;
+        this.jwtUtil = jwtUtil;
+        this.repo = repo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // ======================
@@ -29,10 +45,10 @@ public class AuthService {
 
     @Transactional
     public UserResponseDTO register(RegisterDTO dto) {
-        if (repository.existsByLogin(dto.getLogin())) {
+        if (repo.existByLogin(dto.getLogin())) {
             throw new UserAlreadyExistException("Login jest już zajęty");
         }
-        if (repository.existsByEmail(dto.getEmail())) {
+        if (repo.existsByEmail(dto.getEmail())) {
             throw new UserAlreadyExistException("Ten email jest już zajęty");
         }
 
@@ -45,7 +61,7 @@ public class AuthService {
         user.setStatus(dto.getStatus());
         user.setWiek(dto.getWiek());
 //        user.setZdjecie(dto.getZdjecie());
-        Uzytkownik saved = repository.save(user);
+        Uzytkownik saved = repo.save(user);
 
         return new UserResponseDTO(saved);
     }
@@ -54,14 +70,26 @@ public class AuthService {
     // LOGIN
     // ======================
 
-    public UserResponseDTO login(LoginDto dto){
-        Uzytkownik user = repository.
-                findByLoginOrEmail(dto.getLogin(), dto.getHaslo())
-                .orElseThrow(() -> new UserNotFoundException("Nieprawidłowy login lub hasło"));
-        if (!passwordEncoder.matches(dto.getHaslo(), user.getHaslo())){
-            throw new UserNotFoundException("Nieproawidłowy login lub hasło");
-        }
-        return new UserResponseDTO(user);
+    public AuthResponseDto login(LoginDto dto){
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        dto.getLogin(),
+                        dto.getHaslo()
+                )
+        );
+
+        Uzytkownik user = repo.findByLogin(dto.getLogin())
+                .orElseThrow();
+
+        String token = jwtUtil.generateToken(
+                user.getLogin()
+        );
+
+        return new AuthResponseDto(
+                token,
+                user.getLogin(),
+                user.getStatus()
+        );
     }
 }
 

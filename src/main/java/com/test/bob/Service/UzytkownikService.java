@@ -2,7 +2,7 @@ package com.test.bob.Service;
 
 import com.test.bob.DTO.UzytkownikDTO;
 import com.test.bob.Entity.Uzytkownik;
-import com.test.bob.Repository.uzytkownikRepository;
+import com.test.bob.Repository.UzytkownikRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class UzytkownikService {
     @Autowired
-    private uzytkownikRepository repo;
+    private UzytkownikRepository repo;
 
     public List<Uzytkownik> findAllUzytkownik() {
         List<Uzytkownik> results = repo.findAllUzytkownik();

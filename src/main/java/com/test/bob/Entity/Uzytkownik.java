@@ -18,7 +18,7 @@ public class Uzytkownik {
     private String imie;
     private String nazwisko;
     private int wiek;
-    private String Status;
+    private String status;
     @Column(name = "zdjecie", columnDefinition = "bytea", nullable = true)
     private byte[] zdjecie;
     private String opis;

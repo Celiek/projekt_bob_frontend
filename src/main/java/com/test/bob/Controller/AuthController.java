@@ -1,5 +1,6 @@
 package com.test.bob.Controller;
 
+import com.test.bob.DTO.AuthResponseDto;
 import com.test.bob.DTO.LoginDto;
 import com.test.bob.DTO.RegisterDTO;
 import com.test.bob.DTO.UserResponseDTO;
@@ -27,8 +28,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(
-            @Valid @RequestBody LoginDto dto){
+    public ResponseEntity<AuthResponseDto> login(
+            @Valid @RequestBody LoginDto dto
+    ) {
         return ResponseEntity.ok(authService.login(dto));
     }
+
 }

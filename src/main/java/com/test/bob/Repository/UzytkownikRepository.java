@@ -8,8 +8,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface uzytkownikRepository extends CrudRepository<Uzytkownik, Integer > {
+public interface UzytkownikRepository extends CrudRepository<Uzytkownik, Integer > {
 
     @Query(value="select * from uzytkownik", nativeQuery = true)
     List<Uzytkownik> findAllUzytkownik();
@@ -56,8 +57,13 @@ public interface uzytkownikRepository extends CrudRepository<Uzytkownik, Integer
     @Query(value = "DELETE FROM uzytkownik WHERE login=COALESCE(:login,login)", nativeQuery=true)
     void deleteUzytkownik(@Param("login")String login);
 
+    Uzytkownik findByUsername(String username);
 
 
+    Optional<Uzytkownik> findByLogin(String login);
+
+    boolean existByLogin(String username);
+    boolean existsByEmail(String email);
 }
 
 
