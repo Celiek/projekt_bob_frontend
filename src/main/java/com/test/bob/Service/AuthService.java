@@ -6,17 +6,14 @@ import com.test.bob.DTO.LoginDto;
 import com.test.bob.DTO.RegisterDTO;
 import com.test.bob.DTO.UserResponseDTO;
 import com.test.bob.Entity.Uzytkownik;
-import com.test.bob.Repository.RegisterRepository;
 import com.test.bob.Repository.UzytkownikRepository;
-import com.test.bob.exception.UserNotFoundException;
+import com.test.bob.exception.UserAlreadyExistException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.test.bob.exception.UserAlreadyExistException;
 
 @Service
 public class AuthService {
@@ -28,8 +25,8 @@ public class AuthService {
 
 
     public AuthService(
-            AuthenticationManager authManager,
             JwtUtil jwtUtil,
+            AuthenticationManager authManager,
             UzytkownikRepository repo,
             BCryptPasswordEncoder passwordEncoder
     ) {
@@ -45,7 +42,7 @@ public class AuthService {
 
     @Transactional
     public UserResponseDTO register(RegisterDTO dto) {
-        if (repo.existByLogin(dto.getLogin())) {
+        if (repo.existsByLogin(dto.getLogin())) {
             throw new UserAlreadyExistException("Login jest już zajęty");
         }
         if (repo.existsByEmail(dto.getEmail())) {
@@ -71,7 +68,14 @@ public class AuthService {
     // ======================
 
     public AuthResponseDto login(LoginDto dto){
+        String raw = dto.getHaslo();
+        System.out.println("[LOGIN DEBUG] login=" + dto.getLogin()
+                + "haslo " + dto.getHaslo()
+                + " hasloNull=" + (raw == null)
+                + " hasloLen=" + (raw == null ? -1 : raw.length()));
+
         Authentication auth = authManager.authenticate(
+
                 new UsernamePasswordAuthenticationToken(
                         dto.getLogin(),
                         dto.getHaslo()

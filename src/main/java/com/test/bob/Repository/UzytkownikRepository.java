@@ -57,12 +57,9 @@ public interface UzytkownikRepository extends CrudRepository<Uzytkownik, Integer
     @Query(value = "DELETE FROM uzytkownik WHERE login=COALESCE(:login,login)", nativeQuery=true)
     void deleteUzytkownik(@Param("login")String login);
 
-    Uzytkownik findByUsername(String username);
-
-
     Optional<Uzytkownik> findByLogin(String login);
 
-    boolean existByLogin(String username);
+    boolean existsByLogin(String login);
     boolean existsByEmail(String email);
 }
 
