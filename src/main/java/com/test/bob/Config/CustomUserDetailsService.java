@@ -2,8 +2,6 @@ package com.test.bob.Config;
 
 import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Repository.UzytkownikRepository;
-import com.test.bob.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

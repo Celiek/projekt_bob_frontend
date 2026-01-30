@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Uzytkownik {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id_uzytkownik")
     private int id_uzytkownik;
     private String login;
     private String haslo;
