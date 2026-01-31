@@ -28,7 +28,9 @@ public class Offer {
     private String miasto;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(
+            name = "owner_id",
+            referencedColumnName = "id_uzytkownik")
     private Uzytkownik owner;
 
     private String status;

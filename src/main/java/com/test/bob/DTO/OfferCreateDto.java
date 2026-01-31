@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 public class OfferCreateDto {
     private String nazwa;
     private String opis;
-    private BigDecimal stawka;
+    private String krotkiOpis;
+    private Double stawka;
     private String miasto;
+    private String Status;
 }

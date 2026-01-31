@@ -1,7 +1,6 @@
 package com.test.bob.DTO;
 
 import com.test.bob.Entity.Offer;
-import com.test.bob.Entity.ZdjecieOferty;
 import lombok.Getter;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class OfferResponseDto {
     private List<String> images;
     private String ownerLogin;
 
-    public OfferResponseDto(Offer offer) {
+    public OfferResponseDto(Offer offer, String baseUrl) {
         this.opis = offer.getOpis();
         this.id = offer.getId();
         this.nazwa = offer.getNazwa();
@@ -28,7 +27,7 @@ public class OfferResponseDto {
         this.status = offer.getStatus();
         this.images = offer.getImagePath()
                 .stream()
-                .map(ZdjecieOferty::getFileKey)
+                .map(z -> baseUrl + "/"+ z.getFileKey())
                 .toList();
         this.ownerLogin = offer.getOwner() != null
                 ? offer.getOwner().getLogin()

@@ -1,15 +1,17 @@
 package com.test.bob.Service;
 
+import com.test.bob.DTO.OfferCreateDto;
 import com.test.bob.DTO.OfferResponseDto;
 import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Repository.OfferRepository;
 import com.test.bob.Repository.UzytkownikRepository;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,8 +22,9 @@ public class OfferService {
     private final UzytkownikRepository userRepo;
     private final MinioService service;
 
-    public Offer createOffer(OfferResponseDto dto,
-                             String imagePath) {
+    @Transactional
+    public Offer createOffer(OfferCreateDto dto,
+                             MultipartFile imagePath) {
         String login = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -42,14 +45,18 @@ public class OfferService {
         offer.setStatus(dto.getStatus());
         offer.setOwner(owner);
 
-        return repo.save(offer);
+        Offer saved = repo.save(offer);
+
+        service.uploadOfferImage(saved.getId(), imagePath);
+
+        return saved;
     }
 
     @Transactional(readOnly = true)
-    public List<OfferResponseDto> getAllOffers() {
+    public List<OfferResponseDto> getAllOffers(String imageBaseUrl) {
         return repo.findAll()
                 .stream()
-                .map(OfferResponseDto::new)
+                .map(o -> new OfferResponseDto(o, imageBaseUrl))
                 .toList();
     }
 }
