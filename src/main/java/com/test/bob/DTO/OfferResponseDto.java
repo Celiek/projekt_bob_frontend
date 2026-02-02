@@ -7,6 +7,8 @@ import java.util.List;
 
 @Getter
 public class OfferResponseDto {
+
+    // Dodać do DTO datę dodania ogłoszenia
     private Long id;
     private String nazwa;
     private String opis;
@@ -16,6 +18,7 @@ public class OfferResponseDto {
     private String status;
     private List<String> images;
     private String ownerLogin;
+
 
     public OfferResponseDto(Offer offer, String baseUrl) {
         this.opis = offer.getOpis();

@@ -41,4 +41,30 @@ public class OfferController {
                 offerService.getAllOffers(imageBaseUrl)
         );
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchOffers(
+            @RequestParam(required = false) String miasto,
+            @RequestParam(required = false) Double minStawka,
+            @RequestParam(required = false) Double maxStawka,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "25") int size
+    ) {
+        System.out.println("[DEBUG OFFERCONGTROLLER]");
+        System.out.println("miasto=" + miasto);
+        System.out.println("min=" + minStawka);
+        System.out.println("max=" + maxStawka);
+        System.out.println("page=" + page);
+        System.out.println("size=" + size);
+        return ResponseEntity.ok(
+                offerService.getOffersFiltered(
+                        miasto,
+                        minStawka,
+                        maxStawka,
+                        page,
+                        size,
+                        imageBaseUrl
+                )
+        );
+    }
 }

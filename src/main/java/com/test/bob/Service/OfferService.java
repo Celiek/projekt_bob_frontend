@@ -7,6 +7,10 @@ import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Repository.OfferRepository;
 import com.test.bob.Repository.UzytkownikRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -58,5 +62,24 @@ public class OfferService {
                 .stream()
                 .map(o -> new OfferResponseDto(o, imageBaseUrl))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OfferResponseDto> getOffersFiltered(
+            String miasto,
+            Double minStawka,
+            Double maxStawka,
+            int page,
+            int size,
+            String imageBaseUrl
+    ) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
+
+        return repo.findFiltered(miasto,minStawka,maxStawka,pageable)
+                .map(offer -> new OfferResponseDto(offer,imageBaseUrl));
     }
 }
