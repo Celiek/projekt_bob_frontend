@@ -7,6 +7,7 @@ import com.test.bob.Service.MinioService;
 import com.test.bob.Service.OfferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,28 +44,31 @@ public class OfferController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchOffers(
+    public ResponseEntity<Page<OfferResponseDto>> search(
             @RequestParam(required = false) String miasto,
             @RequestParam(required = false) Double minStawka,
             @RequestParam(required = false) Double maxStawka,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "25") int size
+            @RequestParam(defaultValue = "25") int size,
+            @RequestParam(defaultValue="desc") String direction,
+            @RequestParam(defaultValue = "createdAt") String sortBy
     ) {
-        System.out.println("[DEBUG OFFERCONGTROLLER]");
-        System.out.println("miasto=" + miasto);
-        System.out.println("min=" + minStawka);
-        System.out.println("max=" + maxStawka);
-        System.out.println("page=" + page);
-        System.out.println("size=" + size);
-        return ResponseEntity.ok(
+        if (miasto != null && miasto.trim().isEmpty()) {
+            miasto = null;
+        }
+
+        Page<OfferResponseDto> result =
                 offerService.getOffersFiltered(
                         miasto,
                         minStawka,
                         maxStawka,
                         page,
                         size,
+                        sortBy,
+                        direction,
                         imageBaseUrl
-                )
-        );
+                );
+
+        return ResponseEntity.ok(result);
     }
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,10 +38,23 @@ public class Offer {
 
     private String status;
 
-    @OneToMany(mappedBy = "offer")
-    private List<ZdjecieOferty> imagePath;
+    @OneToMany(mappedBy = "offer",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ZdjecieOferty> imagePath = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    public void addImage(ZdjecieOferty image){
+        imagePath.add(image);
+        image.setOffer(this);
+    }
+
+    public void removeOffer(ZdjecieOferty image){
+        imagePath.remove(image);
+        image.setOffer(null);
+    }
 }

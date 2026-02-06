@@ -4,6 +4,7 @@ import com.test.bob.DTO.OfferCreateDto;
 import com.test.bob.DTO.OfferResponseDto;
 import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
+import com.test.bob.Entity.ZdjecieOferty;
 import com.test.bob.Repository.OfferRepository;
 import com.test.bob.Repository.UzytkownikRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class OfferService {
 
     @Transactional
     public Offer createOffer(OfferCreateDto dto,
-                             MultipartFile imagePath) {
+                             MultipartFile image) {
         String login = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -40,6 +41,7 @@ public class OfferService {
                                 "Nie znaleziono użytkownika: " + login
                         )
                 );
+
         Offer offer = new Offer();
         offer.setNazwa(dto.getNazwa());
         offer.setOpis(dto.getOpis());
@@ -51,9 +53,18 @@ public class OfferService {
 
         Offer saved = repo.save(offer);
 
-        service.uploadOfferImage(saved.getId(), imagePath);
+        String fileKey = service.uploadOfferImage(saved.getId(), image);
 
-        return saved;
+        ZdjecieOferty zdjecie = new ZdjecieOferty();
+        zdjecie.setOffer(saved);
+        zdjecie.setFileKey(fileKey);
+        zdjecie.setFileName(image.getOriginalFilename());
+        zdjecie.setContentType(image.getContentType());
+        zdjecie.setPosition(0);
+        saved.getImagePath().add(zdjecie);
+
+
+        return repo.save(saved);
     }
 
     @Transactional(readOnly = true)
@@ -71,15 +82,26 @@ public class OfferService {
             Double maxStawka,
             int page,
             int size,
+            String sortBy,
+            String direction,
             String imageBaseUrl
     ) {
+        Sort.Direction dir=
+                direction.equalsIgnoreCase("asc")
+                ? Sort.Direction.ASC:
+                        Sort.Direction.DESC;
+
         Pageable pageable = PageRequest.of(
                 page,
                 size,
-                Sort.by("createdAt").descending()
+                Sort.by(dir, sortBy)
         );
 
-        return repo.findFiltered(miasto,minStawka,maxStawka,pageable)
+        return repo.findFiltered(
+                miasto,
+                minStawka,
+                maxStawka,
+                pageable)
                 .map(offer -> new OfferResponseDto(offer,imageBaseUrl));
     }
 }
