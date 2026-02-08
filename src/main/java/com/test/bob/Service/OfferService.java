@@ -2,6 +2,7 @@ package com.test.bob.Service;
 
 import com.test.bob.DTO.OfferCreateDto;
 import com.test.bob.DTO.OfferResponseDto;
+import com.test.bob.DTO.UpdateOfferDto;
 import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Entity.ZdjecieOferty;
@@ -104,4 +105,60 @@ public class OfferService {
                 pageable)
                 .map(offer -> new OfferResponseDto(offer,imageBaseUrl));
     }
+
+    @Transactional
+    public Offer updateOffer(Long offerID,
+                             UpdateOfferDto dto,
+                             List<MultipartFile> newImages) {
+
+        Offer offer = repo.findById(offerID)
+                .orElseThrow(() -> new RuntimeException("Oferta nie istnieje"));
+
+        String login = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+
+        if (!offer.getOwner().getLogin().equals(login)) {
+            throw new RuntimeException("Brak uprawnień");
+        }
+
+        if (dto.getNazwa() != null) offer.setNazwa(dto.getNazwa());
+        if (dto.getKrotkiOpis() != null) offer.setKrotkiOpis(dto.getKrotkiOpis());
+        if (dto.getStawka() != null) offer.setStawka(dto.getStawka());
+        if (dto.getMiasto() != null) offer.setMiasto(dto.getMiasto());
+        if (dto.getStatus() != null) offer.setStatus(dto.getStatus());
+
+        // USUWANIE
+        if (dto.getRemoveImageIds() != null && !dto.getRemoveImageIds().isEmpty()) {
+            List<ZdjecieOferty> toRemove = offer.getImagePath().stream()
+                    .filter(img -> dto.getRemoveImageIds().contains(img.getId()))
+                    .toList();
+
+            for (ZdjecieOferty img : toRemove) {
+                service.deleteObject(img.getFileKey());
+                offer.getImagePath().remove(img);
+            }
+        }
+
+        // DODAWANIE
+        if (newImages != null && !newImages.isEmpty()) {
+            int pos = offer.getImagePath().size();
+            for (MultipartFile file : newImages) {
+                String key = service.uploadOfferImage(offer.getId(), file);
+
+                ZdjecieOferty img = new ZdjecieOferty();
+                img.setOffer(offer);
+                img.setFileKey(key);
+                img.setFileName(file.getOriginalFilename());
+                img.setContentType(file.getContentType());
+                img.setPosition(pos++);
+
+                offer.getImagePath().add(img);
+            }
+        }
+
+        return offer;
+    }
+
+
+
 }

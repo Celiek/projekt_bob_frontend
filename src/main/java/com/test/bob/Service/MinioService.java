@@ -3,6 +3,7 @@ package com.test.bob.Service;
 import com.test.bob.Config.MinioProperties;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,4 +40,19 @@ public class MinioService {
             throw new RuntimeException("Błąd uploadu do minio " + e);
         }
     }
+
+    public void deleteObject(String objectKey){
+        try{
+            minioClient.removeObject(
+                    RemoveObjectArgs
+                            .builder()
+                            .bucket(props.getBucket())
+                            .object(objectKey)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Błąd usuwania zdjećia z MINIO"+e);
+        }
+    }
+
 }

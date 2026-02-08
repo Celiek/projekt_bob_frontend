@@ -2,6 +2,7 @@ package com.test.bob.Controller;
 
 import com.test.bob.DTO.OfferCreateDto;
 import com.test.bob.DTO.OfferResponseDto;
+import com.test.bob.DTO.UpdateOfferDto;
 import com.test.bob.Entity.Offer;
 import com.test.bob.Service.MinioService;
 import com.test.bob.Service.OfferService;
@@ -70,5 +71,21 @@ public class OfferController {
                 );
 
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<OfferResponseDto > updateOffer(
+            @PathVariable Long id,
+            @RequestPart("offer") UpdateOfferDto dto,
+            @RequestParam(value = "images",required = false) List<MultipartFile> images
+    ) {
+        Offer updated = offerService.updateOffer(id,dto, images);
+
+        return ResponseEntity.ok(
+                new OfferResponseDto(updated,imageBaseUrl)
+        );
     }
 }
