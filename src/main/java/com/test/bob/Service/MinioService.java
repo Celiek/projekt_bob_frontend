@@ -19,8 +19,9 @@ public class MinioService {
     public String uploadOfferImage(Long offerId,
                                    MultipartFile file){
         try{
-            String objectName = "offers/" + offerId + "/"+
-                    UUID.randomUUID() + "-" + file.getOriginalFilename();
+            String objectName =
+                    "offers/" + offerId + "/" +
+                            UUID.randomUUID() + "-" + file.getOriginalFilename();
 
             minioClient.putObject(
                     PutObjectArgs.builder()

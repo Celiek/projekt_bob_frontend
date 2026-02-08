@@ -24,7 +24,14 @@ public class OfferController {
     private final MinioService service;
     private final OfferService offerService;
     @Value("${minio.url}")
-    private String imageBaseUrl;
+    private String minioUrl;
+
+    @Value("${minio.bucket}")
+    private String bucket;
+
+    private String imageBaseUrl() {
+        return minioUrl + "/" + bucket;
+    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<OfferResponseDto> createOffer(
@@ -34,13 +41,13 @@ public class OfferController {
         Offer saved = offerService.createOffer(dto,image);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new OfferResponseDto(saved, imageBaseUrl));
+                .body(new OfferResponseDto(saved, imageBaseUrl()));
     }
 
     @GetMapping
     public ResponseEntity<List<OfferResponseDto>> getAllOffer() {
         return ResponseEntity.ok(
-                offerService.getAllOffers(imageBaseUrl)
+                offerService.getAllOffers(imageBaseUrl())
         );
     }
 
@@ -67,7 +74,7 @@ public class OfferController {
                         size,
                         sortBy,
                         direction,
-                        imageBaseUrl
+                        imageBaseUrl()
                 );
 
         return ResponseEntity.ok(result);
@@ -85,7 +92,7 @@ public class OfferController {
         Offer updated = offerService.updateOffer(id,dto, images);
 
         return ResponseEntity.ok(
-                new OfferResponseDto(updated,imageBaseUrl)
+                new OfferResponseDto(updated,imageBaseUrl())
         );
     }
 }
