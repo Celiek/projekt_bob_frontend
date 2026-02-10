@@ -159,6 +159,17 @@ public class OfferService {
         return offer;
     }
 
+    public Page<OfferResponseDto> getLatestOffers(
+            int page,
+            int size,
+            String imageBaseUrl
+    ) {
+        Pageable pageable = PageRequest.of(
+                page,size,Sort.by(Sort.Direction.DESC,"createdAt")
+        );
 
+        return repo.findAll(pageable)
+                .map( o -> new OfferResponseDto(o,imageBaseUrl));
+    }
 
 }

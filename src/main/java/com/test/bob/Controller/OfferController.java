@@ -95,4 +95,14 @@ public class OfferController {
                 new OfferResponseDto(updated,imageBaseUrl())
         );
     }
+
+    @GetMapping("/latest")
+    public ResponseEntity<Page<OfferResponseDto>> latestOffers(
+            @RequestParam(defaultValue = "0") int pageSize,
+            @RequestParam(defaultValue = "25") int size
+    ) {
+        return ResponseEntity.ok(
+                offerService.getLatestOffers(pageSize,size,imageBaseUrl())
+        );
+    }
 }

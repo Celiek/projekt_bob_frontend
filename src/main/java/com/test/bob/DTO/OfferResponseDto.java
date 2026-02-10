@@ -2,6 +2,9 @@ package com.test.bob.DTO;
 
 import com.test.bob.Entity.Offer;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -36,4 +39,6 @@ public class OfferResponseDto {
                 ? offer.getOwner().getLogin()
                 : null;
     }
+
+
 }
