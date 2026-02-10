@@ -105,4 +105,11 @@ public class OfferController {
                 offerService.getLatestOffers(pageSize,size,imageBaseUrl())
         );
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OfferResponseDto> getOfferById(@PathVariable Long id){
+        OfferResponseDto dto = offerService.getofferById(id, imageBaseUrl());
+
+        return ResponseEntity.ok(dto);
+    }
 }

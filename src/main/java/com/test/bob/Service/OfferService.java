@@ -8,6 +8,7 @@ import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Entity.ZdjecieOferty;
 import com.test.bob.Repository.OfferRepository;
 import com.test.bob.Repository.UzytkownikRepository;
+import com.test.bob.exception.OfferNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -170,6 +171,15 @@ public class OfferService {
 
         return repo.findAll(pageable)
                 .map( o -> new OfferResponseDto(o,imageBaseUrl));
+    }
+
+    @Transactional
+    public OfferResponseDto getofferById(Long id, String imageBaseUrl){
+        Offer offer = repo.findById(id)
+                .orElseThrow(() ->
+                        new OfferNotFoundException(id)
+                );
+        return new OfferResponseDto(offer,imageBaseUrl);
     }
 
 }
