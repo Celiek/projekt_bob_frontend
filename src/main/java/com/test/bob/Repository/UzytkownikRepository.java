@@ -61,6 +61,8 @@ public interface UzytkownikRepository extends CrudRepository<Uzytkownik, Integer
 
     boolean existsByLogin(String login);
     boolean existsByEmail(String email);
+
+
 }
 
 

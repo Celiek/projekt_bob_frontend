@@ -54,4 +54,5 @@ public class UzytkownikService {
                         p.getId_dostepnosc(), p.getId_kategorii())).
                         collect(Collectors.toList());
     }
+
 }

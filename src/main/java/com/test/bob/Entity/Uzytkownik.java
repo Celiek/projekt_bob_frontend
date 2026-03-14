@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -25,5 +27,8 @@ public class Uzytkownik {
     private String opis;
     private Integer id_dostepnosc;
     private Integer id_kategorii;
+
+    @OneToMany(mappedBy = "uzytkownik")
+    private List<Dostepnosc> dostepnosci;
 
 }

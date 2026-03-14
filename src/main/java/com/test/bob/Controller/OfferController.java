@@ -107,6 +107,7 @@ public class OfferController {
     }
 
     @GetMapping("/{id}")
+
     public ResponseEntity<OfferResponseDto> getOfferById(@PathVariable Long id){
         OfferResponseDto dto = offerService.getofferById(id, imageBaseUrl());
 

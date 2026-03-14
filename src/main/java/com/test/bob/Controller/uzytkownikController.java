@@ -1,13 +1,20 @@
 package com.test.bob.Controller;
 
+import com.test.bob.DTO.DostepnoscDTO;
+import com.test.bob.DTO.DostepnoscUpdateDTO;
 import com.test.bob.DTO.UzytkownikDTO;
+import com.test.bob.Entity.Dostepnosc;
 import com.test.bob.Entity.Uzytkownik;
+import com.test.bob.Repository.UzytkownikRepository;
+import com.test.bob.Service.DostepnoscService;
 import com.test.bob.Service.UzytkownikService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +26,40 @@ public class uzytkownikController {
     @Autowired
     private UzytkownikService service;
 
-    @GetMapping("/wildcard")
+    @Autowired
+    private DostepnoscService dostepnoscService;
+
+
+    @Autowired
+    private UzytkownikRepository repo;
+
+
+    @GetMapping("/findall")
     public List<Uzytkownik> wildcard() {
         return service.findAllUzytkownik();
+    }
+
+    @PutMapping("/me/dostepnosc")
+    public String ustawDostepnosc(@RequestBody DostepnoscDTO dto){
+        String login = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        dostepnoscService.ustawDostepnosc(login,dto);
+
+        return "Zmieniono dostepnosc";
+    }
+
+    @PatchMapping("/me/updatedostepnosc")
+    public Dostepnosc updateDostepnosc(@RequestBody DostepnoscUpdateDTO dto){
+        String login = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        Uzytkownik user = repo.findByLogin(login).orElseThrow();
+
+        return dostepnoscService.updateDostepnosc(user.getId(),dto);
     }
 
     @PostMapping("/rejestracja")
@@ -84,4 +122,19 @@ public class uzytkownikController {
             return new ArrayList<>();
         }
     }
+
+    @GetMapping("/me")
+    public Uzytkownik me(){
+        String login = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return repo.findByLogin(login)
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.UNAUTHORIZED,"Uzytkownik nie zalogowany"));
+    }
+
+
+
 }
