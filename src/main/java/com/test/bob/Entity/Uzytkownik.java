@@ -28,7 +28,7 @@ public class Uzytkownik {
     private Integer id_dostepnosc;
     private Integer id_kategorii;
 
-    @OneToMany(mappedBy = "uzytkownik")
-    private List<Dostepnosc> dostepnosci;
+//    @OneToMany(mappedBy = "uzytkownik")
+//    private List<Dostepnosc> dostepnosci;
 
 }

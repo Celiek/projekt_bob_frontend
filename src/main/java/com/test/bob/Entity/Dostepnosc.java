@@ -20,7 +20,7 @@ public class Dostepnosc {
     private Boolean sobota;
     private Boolean niedziela;
     @OneToOne
-    @JoinColumn(name="id_uzytkownika")
+    @JoinColumn(name="uzytkownik_id")
     private Uzytkownik uzytkownik;
 
 }

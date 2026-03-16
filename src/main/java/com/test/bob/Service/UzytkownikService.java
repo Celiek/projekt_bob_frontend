@@ -55,4 +55,9 @@ public class UzytkownikService {
                         collect(Collectors.toList());
     }
 
+
+    public void changeRoleToSpecjalistaByLogin(String login){
+        repo.changeRoleToSpecjalistaByLogin(login);
+    }
+
 }
