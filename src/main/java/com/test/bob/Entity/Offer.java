@@ -1,9 +1,9 @@
 package com.test.bob.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -31,10 +31,9 @@ public class Offer {
 
     private String miasto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "owner_id",
-            referencedColumnName = "id_uzytkownik")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id_uzytkownik")
+    @JsonIgnoreProperties({"offers"})
     private Uzytkownik owner;
 
     private String status;

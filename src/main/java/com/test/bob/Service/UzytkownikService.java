@@ -1,6 +1,7 @@
 package com.test.bob.Service;
 
 import com.test.bob.DTO.UzytkownikDTO;
+import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Repository.UzytkownikRepository;
 import jakarta.transaction.Transactional;
@@ -58,6 +59,10 @@ public class UzytkownikService {
 
     public void changeRoleToSpecjalistaByLogin(String login){
         repo.changeRoleToSpecjalistaByLogin(login);
+    }
+
+    public List<Offer> getAllOffersByLogin(String login){
+        return repo.getAllOffersByLogin(login);
     }
 
 }

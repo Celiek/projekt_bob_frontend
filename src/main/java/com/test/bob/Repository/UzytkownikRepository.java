@@ -1,6 +1,9 @@
 package com.test.bob.Repository;
 
+import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -67,6 +70,9 @@ public interface UzytkownikRepository extends CrudRepository<Uzytkownik, Integer
     @Modifying
     @Query(value = "update uzytkownik SET status='specjalist' where login = login",nativeQuery = true)
     boolean changeRoleToSpecjalistaByLogin(@Param("login") String login);
+
+    @Query(value = "Select o FROM Offer o WHERE o.owner.login = :login")
+    List<Offer> getAllOffersByLogin(@Param("login")String login);
 
 }
 

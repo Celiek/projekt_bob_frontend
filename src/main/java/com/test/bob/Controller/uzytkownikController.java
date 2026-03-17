@@ -2,9 +2,12 @@ package com.test.bob.Controller;
 
 import com.test.bob.DTO.DostepnoscDTO;
 import com.test.bob.DTO.DostepnoscUpdateDTO;
+import com.test.bob.DTO.OfferDTO;
 import com.test.bob.DTO.UzytkownikDTO;
 import com.test.bob.Entity.Dostepnosc;
+import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
+import com.test.bob.Mappers.OfferMapper;
 import com.test.bob.Repository.UzytkownikRepository;
 import com.test.bob.Service.DostepnoscService;
 import com.test.bob.Service.UzytkownikService;
@@ -113,6 +116,7 @@ public class uzytkownikController {
         }
     }
 
+    //zwraca liste uzytkowników
     @GetMapping("/wyswietl")
     public List<UzytkownikDTO>getAll(){
         try{
@@ -122,6 +126,8 @@ public class uzytkownikController {
             return new ArrayList<>();
         }
     }
+
+    //zwraca dane użytkownika
 
     @GetMapping("/me")
     public Uzytkownik me(){
@@ -135,6 +141,33 @@ public class uzytkownikController {
                                 HttpStatus.UNAUTHORIZED,"Uzytkownik nie zalogowany"));
     }
 
+    @PostMapping("/changerole")
+    public String changeRoleToSpecjalistaByLogin(){
+        String login = SecurityContextHolder.
+                getContext().
+                getAuthentication()
+                .getName();
+        try{
+            service.changeRoleToSpecjalistaByLogin(login);
+            return ("Zmieniono rolę dla " + login);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    //zwraca listę ofert wystawionych przez użytkownika
+    @GetMapping("/me/alloffers")
+    public List<OfferDTO> getAllOffersByLogin(){
+        String login = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+
+        System.out.println("Login uzytkownika"+login);
+
+        List<Offer> oferty =  service.getAllOffersByLogin(login);
+        System.out.println("lista ofert " +oferty);
+        return oferty.stream()
+                .map(OfferMapper::toDTO)
+                .toList();
+    }
 
 }

@@ -1,0 +1,11 @@
+package com.test.bob.DTO;
+
+public record OfferDTO(
+        Long id,
+        String nazwa,
+        String krotkiOpis,
+        String opis,
+        String miasto,
+        Double stawka,
+        String ownerLogin
+) {}
