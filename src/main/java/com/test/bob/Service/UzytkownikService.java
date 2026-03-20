@@ -1,5 +1,6 @@
 package com.test.bob.Service;
 
+import com.test.bob.DTO.OfferResponseDto;
 import com.test.bob.DTO.UzytkownikDTO;
 import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
@@ -15,6 +16,9 @@ import java.util.stream.StreamSupport;
 public class UzytkownikService {
     @Autowired
     private UzytkownikRepository repo;
+
+    @Autowired
+    private  MinioService minioService;
 
     public List<Uzytkownik> findAllUzytkownik() {
         List<Uzytkownik> results = repo.findAllUzytkownik();
@@ -61,8 +65,18 @@ public class UzytkownikService {
         repo.changeRoleToSpecjalistaByLogin(login);
     }
 
-    public List<Offer> getAllOffersByLogin(String login){
-        return repo.getAllOffersByLogin(login);
-    }
+    @Transactional()
+    public List<OfferResponseDto> getAllOffersByLogin(String login) {
+        return repo.getAllOffersByLogin(login)
+                .stream()
+                .map( o-> {
+                    List<String> images = o.getImagePath().stream()
+                            .map(img -> minioService.getPresignedUrl(img.getFileKey()))
+                            .toList();
 
+                    return new OfferResponseDto(o,images);
+                })
+        .toList();
+
+    }
 }

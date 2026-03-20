@@ -1,5 +1,7 @@
 package com.test.bob.DTO;
 
+import java.util.List;
+
 public record OfferDTO(
         Long id,
         String nazwa,
@@ -7,5 +9,6 @@ public record OfferDTO(
         String opis,
         String miasto,
         Double stawka,
-        String ownerLogin
+        String ownerLogin,
+        List<String> images
 ) {}

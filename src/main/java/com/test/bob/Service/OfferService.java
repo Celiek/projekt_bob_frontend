@@ -29,8 +29,15 @@ public class OfferService {
     private final UzytkownikRepository userRepo;
     private final MinioService service;
 
+    private OfferResponseDto mapToDto(Offer offer){
+        List<String> imageUrls = offer.getImagePath().stream()
+                .map(img -> service.getPresignedUrl(img.getFileKey()))
+                .toList();
+        return new OfferResponseDto(offer,imageUrls);
+    }
+
     @Transactional
-    public Offer createOffer(OfferCreateDto dto,
+    public OfferResponseDto createOffer(OfferCreateDto dto,
                              MultipartFile image) {
         String login = SecurityContextHolder
                 .getContext()
@@ -66,14 +73,14 @@ public class OfferService {
         saved.getImagePath().add(zdjecie);
 
 
-        return repo.save(saved);
+        return mapToDto(saved);
     }
 
     @Transactional(readOnly = true)
     public List<OfferResponseDto> getAllOffers(String imageBaseUrl) {
         return repo.findAll()
                 .stream()
-                .map(o -> new OfferResponseDto(o, imageBaseUrl))
+                .map(this::mapToDto)
                 .toList();
     }
 
@@ -104,11 +111,11 @@ public class OfferService {
                 minStawka,
                 maxStawka,
                 pageable)
-                .map(offer -> new OfferResponseDto(offer,imageBaseUrl));
+                .map(this::mapToDto);
     }
 
     @Transactional
-    public Offer updateOffer(Long offerID,
+    public OfferResponseDto updateOffer(Long offerID,
                              UpdateOfferDto dto,
                              List<MultipartFile> newImages) {
 
@@ -157,29 +164,28 @@ public class OfferService {
             }
         }
 
-        return offer;
+        return mapToDto(offer);
     }
 
     public Page<OfferResponseDto> getLatestOffers(
             int page,
-            int size,
-            String imageBaseUrl
+            int size
     ) {
         Pageable pageable = PageRequest.of(
                 page,size,Sort.by(Sort.Direction.DESC,"createdAt")
         );
 
         return repo.findAll(pageable)
-                .map( o -> new OfferResponseDto(o,imageBaseUrl));
+                .map( this::mapToDto);
     }
 
     @Transactional
-    public OfferResponseDto getofferById(Long id, String imageBaseUrl){
+    public OfferResponseDto getofferById(Long id){
         Offer offer = repo.findById(id)
                 .orElseThrow(() ->
                         new OfferNotFoundException(id)
                 );
-        return new OfferResponseDto(offer,imageBaseUrl);
+        return mapToDto(offer);
     }
 
 }

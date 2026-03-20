@@ -71,7 +71,7 @@ public interface UzytkownikRepository extends CrudRepository<Uzytkownik, Integer
     @Query(value = "update uzytkownik SET status='specjalist' where login = login",nativeQuery = true)
     boolean changeRoleToSpecjalistaByLogin(@Param("login") String login);
 
-    @Query(value = "Select o FROM Offer o WHERE o.owner.login = :login")
+    @Query(value = "Select DISTINCT o FROM Offer o LEFT JOIN FETCH o.imagePath WHERE o.owner.login = :login")
     List<Offer> getAllOffersByLogin(@Param("login")String login);
 
 }

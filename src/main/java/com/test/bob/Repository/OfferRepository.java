@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
 
@@ -23,4 +26,7 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
             @Param("maxStawka") Double maxStawka,
             Pageable pageable
     );
+
+    @Query("SELECT o FROM Offer o WHERE o.owner.login = :login")
+    List<Offer> getAllOffersByLogin(@Param("login")String login);
 }

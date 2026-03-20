@@ -13,7 +13,10 @@ public class OfferMapper {
                 offer.getOpis(),
                 offer.getMiasto(),
                 offer.getStawka(),
-                offer.getOwner().getLogin()
+                offer.getOwner().getLogin(),
+                offer.getImagePath()
+                        .stream().map(img -> img.getFileName())
+                        .toList()
         );
     }
 }

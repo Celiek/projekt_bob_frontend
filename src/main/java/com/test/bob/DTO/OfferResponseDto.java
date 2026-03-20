@@ -2,14 +2,12 @@ package com.test.bob.DTO;
 
 import com.test.bob.Entity.Offer;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Getter
 public class OfferResponseDto {
+
 
     // Dodać do DTO datę dodania ogłoszenia
     private Long id;
@@ -23,7 +21,7 @@ public class OfferResponseDto {
     private String ownerLogin;
 
 
-    public OfferResponseDto(Offer offer, String baseUrl) {
+    public OfferResponseDto(Offer offer, List<String> imageUrls) {
         this.opis = offer.getOpis();
         this.id = offer.getId();
         this.nazwa = offer.getNazwa();
@@ -31,14 +29,12 @@ public class OfferResponseDto {
         this.stawka = offer.getStawka();
         this.miasto = offer.getMiasto();
         this.status = offer.getStatus();
-        this.images = offer.getImagePath()
-                .stream()
-                .map(z -> baseUrl + "/"+ z.getFileKey())
-                .toList();
+        this.images = imageUrls;
         this.ownerLogin = offer.getOwner() != null
                 ? offer.getOwner().getLogin()
                 : null;
     }
+
 
 
 }

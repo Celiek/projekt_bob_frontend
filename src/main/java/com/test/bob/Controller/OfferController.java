@@ -3,7 +3,6 @@ package com.test.bob.Controller;
 import com.test.bob.DTO.OfferCreateDto;
 import com.test.bob.DTO.OfferResponseDto;
 import com.test.bob.DTO.UpdateOfferDto;
-import com.test.bob.Entity.Offer;
 import com.test.bob.Service.MinioService;
 import com.test.bob.Service.OfferService;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +37,8 @@ public class OfferController {
             @RequestPart("offer")OfferCreateDto dto,
             @RequestPart("image")MultipartFile image){
 
-        Offer saved = offerService.createOffer(dto,image);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new OfferResponseDto(saved, imageBaseUrl()));
+       return ResponseEntity.status(HttpStatus.CREATED)
+               .body(offerService.createOffer(dto,image));
     }
 
     @GetMapping
@@ -89,10 +86,9 @@ public class OfferController {
             @RequestPart("offer") UpdateOfferDto dto,
             @RequestParam(value = "images",required = false) List<MultipartFile> images
     ) {
-        Offer updated = offerService.updateOffer(id,dto, images);
 
         return ResponseEntity.ok(
-                new OfferResponseDto(updated,imageBaseUrl())
+                offerService.updateOffer(id,dto,images)
         );
     }
 
@@ -102,15 +98,14 @@ public class OfferController {
             @RequestParam(defaultValue = "25") int size
     ) {
         return ResponseEntity.ok(
-                offerService.getLatestOffers(pageSize,size,imageBaseUrl())
+                offerService.getLatestOffers(pageSize,size)
         );
     }
 
     @GetMapping("/{id}")
-
     public ResponseEntity<OfferResponseDto> getOfferById(@PathVariable Long id){
-        OfferResponseDto dto = offerService.getofferById(id, imageBaseUrl());
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(
+                offerService.getofferById(id)
+        );
     }
 }

@@ -1,9 +1,11 @@
 package com.test.bob.Service;
 
 import com.test.bob.Config.MinioProperties;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +55,21 @@ public class MinioService {
             );
         } catch (Exception e) {
             throw new RuntimeException("Błąd usuwania zdjećia z MINIO"+e);
+        }
+    }
+
+    public String getPresignedUrl(String fileKey){
+        try{
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(props.getBucket())
+                            .object(fileKey)
+                            .expiry(60)
+                            .build()
+            );
+        } catch (Exception e){
+            throw  new RuntimeException("Błąd generowania URL " + e.getMessage());
         }
     }
 

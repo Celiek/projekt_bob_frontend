@@ -2,12 +2,10 @@ package com.test.bob.Controller;
 
 import com.test.bob.DTO.DostepnoscDTO;
 import com.test.bob.DTO.DostepnoscUpdateDTO;
-import com.test.bob.DTO.OfferDTO;
+import com.test.bob.DTO.OfferResponseDto;
 import com.test.bob.DTO.UzytkownikDTO;
 import com.test.bob.Entity.Dostepnosc;
-import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
-import com.test.bob.Mappers.OfferMapper;
 import com.test.bob.Repository.UzytkownikRepository;
 import com.test.bob.Service.DostepnoscService;
 import com.test.bob.Service.UzytkownikService;
@@ -157,17 +155,13 @@ public class uzytkownikController {
 
     //zwraca listę ofert wystawionych przez użytkownika
     @GetMapping("/me/alloffers")
-    public List<OfferDTO> getAllOffersByLogin(){
+        public List<OfferResponseDto> getAllOffersByLogin(){
         String login = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
+                .getAuthentication()
+                .getName();
 
-        System.out.println("Login uzytkownika"+login);
-
-        List<Offer> oferty =  service.getAllOffersByLogin(login);
-        System.out.println("lista ofert " +oferty);
-        return oferty.stream()
-                .map(OfferMapper::toDTO)
-                .toList();
+        return service.getAllOffersByLogin(login);
     }
+
 
 }
