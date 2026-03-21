@@ -1,6 +1,7 @@
 package com.test.bob.Mappers;
 
 import com.test.bob.DTO.OfferDTO;
+import com.test.bob.Entity.Kategoria;
 import com.test.bob.Entity.Offer;
 
 public class OfferMapper {
@@ -16,6 +17,10 @@ public class OfferMapper {
                 offer.getOwner().getLogin(),
                 offer.getImagePath()
                         .stream().map(img -> img.getFileName())
+                        .toList(),
+                offer.getOwner().getKategoria()
+                        .stream()
+                        .map(Kategoria::getNazwa_kategorii)
                         .toList()
         );
     }

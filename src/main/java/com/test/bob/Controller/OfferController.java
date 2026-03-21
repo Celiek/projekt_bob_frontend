@@ -73,7 +73,7 @@ public class OfferController {
                         direction,
                         imageBaseUrl()
                 );
-
+        System.out.println("size:"+size);
         return ResponseEntity.ok(result);
     }
 

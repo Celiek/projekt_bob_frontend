@@ -52,6 +52,7 @@ public class Offer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+
     public void addImage(ZdjecieOferty image){
         imagePath.add(image);
         image.setOffer(this);

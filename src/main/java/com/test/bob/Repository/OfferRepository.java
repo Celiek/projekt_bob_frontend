@@ -12,13 +12,12 @@ import java.util.List;
 
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
-
+    // dodać kategorię do wyszukiwania
     @Query("""
-        SELECT DISTINCT o FROM Offer o
-        LEFT JOIN FETCH o.imagePath img
-        WHERE (:miasto IS NULL OR :miasto = '' OR o.miasto = :miasto)
-        AND (:minStawka IS NULL OR o.stawka >= :minStawka)
-        AND (:maxStawka IS NULL OR o.stawka <= :maxStawka)
+    SELECT o FROM Offer o
+    WHERE (:miasto IS NULL OR :miasto = '' OR o.miasto = :miasto)
+    AND (:minStawka IS NULL OR o.stawka >= :minStawka)
+    AND (:maxStawka IS NULL OR o.stawka <= :maxStawka)
     """)
     Page<Offer> findFiltered(
             @Param("miasto") String miasto,

@@ -3,6 +3,7 @@ package com.test.bob.DTO;
 import com.test.bob.Entity.Offer;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,7 @@ public class OfferResponseDto {
     private String status;
     private List<String> images;
     private String ownerLogin;
+    private LocalDateTime createdAt;
 
 
     public OfferResponseDto(Offer offer, List<String> imageUrls) {
@@ -33,6 +35,7 @@ public class OfferResponseDto {
         this.ownerLogin = offer.getOwner() != null
                 ? offer.getOwner().getLogin()
                 : null;
+        this.createdAt = offer.getCreatedAt();
     }
 
 
