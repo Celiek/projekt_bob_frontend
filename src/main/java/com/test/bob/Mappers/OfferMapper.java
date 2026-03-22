@@ -4,6 +4,8 @@ import com.test.bob.DTO.OfferDTO;
 import com.test.bob.Entity.Kategoria;
 import com.test.bob.Entity.Offer;
 
+import java.util.Collections;
+
 public class OfferMapper {
 
     public static OfferDTO toDTO(Offer offer) {
@@ -18,10 +20,9 @@ public class OfferMapper {
                 offer.getImagePath()
                         .stream().map(img -> img.getFileName())
                         .toList(),
-                offer.getOwner().getKategoria()
-                        .stream()
-                        .map(Kategoria::getNazwa_kategorii)
-                        .toList()
+                offer.getKategoria() != null
+                        ? Collections.singletonList(offer.getKategoria().getNazwa())
+                        : null
         );
     }
 }

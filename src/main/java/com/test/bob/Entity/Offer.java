@@ -52,6 +52,9 @@ public class Offer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_kategorii")
+    private Kategoria kategoria;
 
     public void addImage(ZdjecieOferty image){
         imagePath.add(image);

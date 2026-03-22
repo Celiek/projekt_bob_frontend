@@ -28,10 +28,6 @@ public class Uzytkownik {
     private Integer id_dostepnosc;
     private Integer id_kategorii;
 
-    @OneToMany(mappedBy = "uzytkownik", fetch = FetchType.LAZY)
-    private List<Kategoria> kategoria;
-
-
 //    @OneToMany(mappedBy = "uzytkownik")
 //    private List<Dostepnosc> dostepnosci;
 
