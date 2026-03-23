@@ -1,8 +1,7 @@
 package com.test.bob.DTO;
 
 import lombok.Data;
-
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class OfferCreateDto {
@@ -12,4 +11,5 @@ public class OfferCreateDto {
     private Double stawka;
     private String miasto;
     private String Status;
+    List<Long> kategoriaIds;
 }

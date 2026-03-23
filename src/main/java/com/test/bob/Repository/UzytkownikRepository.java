@@ -2,8 +2,6 @@ package com.test.bob.Repository;
 
 import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

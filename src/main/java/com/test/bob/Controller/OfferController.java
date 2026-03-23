@@ -53,20 +53,21 @@ public class OfferController {
             @RequestParam(required = false) String miasto,
             @RequestParam(required = false) Double minStawka,
             @RequestParam(required = false) Double maxStawka,
+            @RequestParam(required = false) String kategoria,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "25") int size,
             @RequestParam(defaultValue="desc") String direction,
             @RequestParam(defaultValue = "createdAt") String sortBy
     ) {
-        if (miasto != null && miasto.trim().isEmpty()) {
-            miasto = null;
-        }
+        if (miasto != null && miasto.trim().isEmpty()) miasto = null;
+        if(kategoria!=null && kategoria.trim().isEmpty()) kategoria = null;
 
         Page<OfferResponseDto> result =
                 offerService.getOffersFiltered(
                         miasto,
                         minStawka,
                         maxStawka,
+                        kategoria,
                         page,
                         size,
                         sortBy,

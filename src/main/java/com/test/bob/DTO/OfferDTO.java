@@ -1,7 +1,5 @@
 package com.test.bob.DTO;
 
-import com.test.bob.Entity.Kategoria;
-
 import java.util.List;
 
 public record OfferDTO(

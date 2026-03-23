@@ -3,9 +3,11 @@ package com.test.bob.Service;
 import com.test.bob.DTO.OfferCreateDto;
 import com.test.bob.DTO.OfferResponseDto;
 import com.test.bob.DTO.UpdateOfferDto;
+import com.test.bob.Entity.Kategoria;
 import com.test.bob.Entity.Offer;
 import com.test.bob.Entity.Uzytkownik;
 import com.test.bob.Entity.ZdjecieOferty;
+import com.test.bob.Repository.KategoriaRepository;
 import com.test.bob.Repository.OfferRepository;
 import com.test.bob.Repository.UzytkownikRepository;
 import com.test.bob.exception.OfferNotFoundException;
@@ -28,6 +30,7 @@ public class OfferService {
     private final OfferRepository repo;
     private final UzytkownikRepository userRepo;
     private final MinioService service;
+    private final KategoriaRepository kategoriaRepo;
 
     private OfferResponseDto mapToDto(Offer offer){
         List<String> imageUrls = offer.getImagePath().stream()
@@ -60,6 +63,13 @@ public class OfferService {
         offer.setStatus(dto.getStatus());
         offer.setOwner(owner);
 
+        if(dto.getKategoriaIds() != null && !dto.getKategoriaIds().isEmpty()){
+            List<Kategoria> kategorie = kategoriaRepo.findAllById(dto.getKategoriaIds());
+            offer.setKategoria((Kategoria) kategorie);
+
+            kategorie.forEach(k -> k.getOferty().add(offer));
+        }
+
         Offer saved = repo.save(offer);
 
         String fileKey = service.uploadOfferImage(saved.getId(), image);
@@ -89,6 +99,7 @@ public class OfferService {
             String miasto,
             Double minStawka,
             Double maxStawka,
+            String kategoria,
             int page,
             int size,
             String sortBy,
@@ -110,6 +121,7 @@ public class OfferService {
                 miasto,
                 minStawka,
                 maxStawka,
+                kategoria,
                 pageable)
                 .map(this::mapToDto);
     }
