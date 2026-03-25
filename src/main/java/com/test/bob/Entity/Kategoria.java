@@ -23,6 +23,6 @@ public class Kategoria {
     @JoinColumn(name = "uzytkownik_id")
     private Uzytkownik uzytkownik;
 
-    @OneToMany(mappedBy = "kategoria")
+    @ManyToMany(mappedBy = "kategorie")
     private List<Offer> oferty = new ArrayList<>();
 }

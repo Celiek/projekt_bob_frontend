@@ -52,9 +52,13 @@ public class Offer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_kategorii")
-    private Kategoria kategoria;
+    @ManyToMany
+    @JoinTable(
+            name = "offer_kategorie",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "kategoria_id")
+    )
+    private List<Kategoria> kategorie = new ArrayList<>();
 
     public void addImage(ZdjecieOferty image){
         imagePath.add(image);

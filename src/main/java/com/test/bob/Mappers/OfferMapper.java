@@ -1,10 +1,7 @@
 package com.test.bob.Mappers;
 
 import com.test.bob.DTO.OfferDTO;
-import com.test.bob.Entity.Kategoria;
 import com.test.bob.Entity.Offer;
-
-import java.util.Collections;
 
 public class OfferMapper {
 
@@ -20,9 +17,10 @@ public class OfferMapper {
                 offer.getImagePath()
                         .stream().map(img -> img.getFileName())
                         .toList(),
-                offer.getKategoria() != null
-                        ? Collections.singletonList(offer.getKategoria().getNazwa())
-                        : null
+                offer.getKategorie()
+                        .stream()
+                        .map(k -> k.getNazwa())
+                        .toList()
         );
     }
 }

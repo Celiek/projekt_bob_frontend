@@ -65,7 +65,7 @@ public class OfferService {
 
         if(dto.getKategoriaIds() != null && !dto.getKategoriaIds().isEmpty()){
             List<Kategoria> kategorie = kategoriaRepo.findAllById(dto.getKategoriaIds());
-            offer.setKategoria((Kategoria) kategorie);
+            offer.setKategorie(kategorie);
 
             kategorie.forEach(k -> k.getOferty().add(offer));
         }
